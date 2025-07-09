@@ -34,6 +34,10 @@ app.use((req, res, next) => {
   next();
 });
 
+app.get('/', (req, res) => {
+  res.send(path.join(__dirname, 'index.html'));
+});
+
 // Helper function to format duration from ISO 8601 to readable format
 const formatDuration = (isoDuration) => {
   const match = isoDuration.match(/PT(\d+H)?(\d+M)?(\d+S)?/);
