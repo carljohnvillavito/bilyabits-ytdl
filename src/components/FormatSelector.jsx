@@ -29,10 +29,10 @@ const FormatSelector = ({
       initial={{ opacity: 0, x: -20 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.5, delay: 0.1 }}
-      className="bg-dark-700/30 backdrop-blur-sm border border-dark-600/50 rounded-2xl p-6 hover:border-primary-500/30 transition-all duration-300"
+      className="bg-zinc-900/40 backdrop-blur-sm border border-zinc-800/50 rounded-2xl p-6 hover:border-red-600/30 transition-all duration-300"
     >
       <div className="flex items-center space-x-2 mb-6">
-        <SafeIcon icon={FiSettings} className="text-primary-500 text-xl" />
+        <SafeIcon icon={FiSettings} className="text-red-600 text-xl" />
         <h3 className="text-xl font-bold text-white">Format & Quality</h3>
       </div>
       
@@ -50,8 +50,8 @@ const FormatSelector = ({
                 whileTap={{ scale: 0.98 }}
                 className={`p-3 rounded-lg border transition-all duration-300 flex items-center space-x-3 ${
                   selectedFormat === format.value
-                    ? 'bg-primary-500/20 border-primary-500 text-primary-400'
-                    : 'bg-dark-600/50 border-dark-500 text-gray-400 hover:border-primary-500/50'
+                    ? 'bg-red-600/20 border-red-600 text-red-400'
+                    : 'bg-zinc-800/50 border-zinc-700 text-gray-400 hover:border-green-500/50'
                 }`}
               >
                 <SafeIcon icon={format.icon} className="text-lg" />
@@ -74,8 +74,8 @@ const FormatSelector = ({
                 whileTap={{ scale: 0.98 }}
                 className={`w-full p-3 rounded-lg border transition-all duration-300 flex items-center justify-between ${
                   selectedQuality === quality.value
-                    ? 'bg-primary-500/20 border-primary-500 text-primary-400'
-                    : 'bg-dark-600/50 border-dark-500 text-gray-400 hover:border-primary-500/50'
+                    ? 'bg-red-600/20 border-red-600 text-red-400'
+                    : 'bg-zinc-800/50 border-zinc-700 text-gray-400 hover:border-green-500/50'
                 }`}
               >
                 <span className="font-medium">{quality.label}</span>

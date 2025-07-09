@@ -7,7 +7,7 @@ import FormatSelector from './FormatSelector';
 import DownloadButton from './DownloadButton';
 import { validateYouTubeUrl, extractVideoId } from '../utils/youtube';
 
-const { FiLink, FiSearch, FiAlertCircle } = FiIcons;
+const { FiLink, FiSearch, FiAlertCircle, FiClipboard } = FiIcons;
 
 const VideoDownloader = () => {
   const [url, setUrl] = useState('');
@@ -60,6 +60,16 @@ const VideoDownloader = () => {
     }
   };
 
+  const handlePaste = async () => {
+    try {
+      const text = await navigator.clipboard.readText();
+      setUrl(text);
+    } catch (err) {
+      console.error('Failed to read clipboard contents: ', err);
+      setError('Failed to access clipboard. Please paste the URL manually.');
+    }
+  };
+
   const handleDownload = async () => {
     if (!videoInfo) return;
     
@@ -100,14 +110,26 @@ const VideoDownloader = () => {
             value={url}
             onChange={(e) => setUrl(e.target.value)}
             placeholder="Paste YouTube URL here..."
-            className="w-full pl-12 pr-32 py-4 bg-dark-700/50 backdrop-blur-sm border border-dark-600 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-300"
+            className="w-full pl-12 pr-32 py-4 bg-zinc-900/60 backdrop-blur-sm border border-zinc-800 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-600 focus:border-transparent transition-all duration-300"
           />
+          <div className="absolute right-24 top-1/2 transform -translate-y-1/2">
+            <motion.button
+              type="button"
+              onClick={handlePaste}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="bg-zinc-800 hover:bg-zinc-700 text-gray-300 px-3 py-2 rounded-lg mr-2 transition-colors duration-300 flex items-center space-x-1"
+            >
+              <SafeIcon icon={FiClipboard} />
+              <span className="text-sm">Paste</span>
+            </motion.button>
+          </div>
           <motion.button
             type="submit"
             disabled={loading || !url}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-primary-500 hover:bg-primary-600 disabled:bg-gray-600 disabled:cursor-not-allowed text-white px-6 py-2 rounded-lg font-medium transition-all duration-300 flex items-center space-x-2"
+            className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-red-600 hover:bg-red-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white px-6 py-2 rounded-lg font-medium transition-all duration-300 flex items-center space-x-2"
           >
             {loading ? (
               <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
