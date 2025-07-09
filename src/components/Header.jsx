@@ -5,8 +5,13 @@ import SafeIcon from '../common/SafeIcon';
 
 const { FiDownload, FiYoutube, FiGithub, FiFacebook, FiMenu, FiX } = FiIcons;
 
-const Header = ({ socialLinks = { github: 'https://github.com/bilyabits/ytdl', facebook: 'https://facebook.com/bilyabits' } }) => {
+const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  
+  const socialLinks = {
+    github: 'https://github.com/carljohnvillavito/bilyabits-ytdl',
+    facebook: 'https://facebook.com/carljohn.villavito'
+  };
 
   return (
     <motion.header 
@@ -15,21 +20,21 @@ const Header = ({ socialLinks = { github: 'https://github.com/bilyabits/ytdl', f
       transition={{ duration: 0.6 }}
       className="bg-black/80 backdrop-blur-sm border-b border-zinc-800/50 sticky top-0 z-50"
     >
-      <div className="container mx-auto px-4 py-3 md:py-4">
+      <div className="container mx-auto px-4 py-3">
         <div className="flex items-center justify-between">
           <motion.div 
-            className="flex items-center space-x-2 md:space-x-3"
+            className="flex items-center space-x-2"
             whileHover={{ scale: 1.05 }}
             transition={{ type: "spring", stiffness: 400, damping: 17 }}
           >
             <div className="relative">
               <SafeIcon 
                 icon={FiDownload} 
-                className="text-xl md:text-2xl text-red-600" 
+                className="text-lg md:text-xl text-red-600" 
               />
-              <div className="absolute -top-1 -right-1 w-2 h-2 md:w-3 md:h-3 bg-green-500 rounded-full animate-pulse"></div>
+              <div className="absolute -top-1 -right-1 w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
             </div>
-            <h1 className="text-xl md:text-2xl font-bold bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
+            <h1 className="text-lg md:text-xl font-bold bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
               BILYABITS-ytdl
             </h1>
           </motion.div>
@@ -55,7 +60,7 @@ const Header = ({ socialLinks = { github: 'https://github.com/bilyabits/ytdl', f
                 whileTap={{ scale: 0.9 }}
                 className="text-gray-400 hover:text-green-500 transition-colors duration-300"
               >
-                <SafeIcon icon={FiGithub} className="text-xl" />
+                <SafeIcon icon={FiGithub} className="text-lg" />
               </motion.a>
               <motion.a 
                 href={socialLinks.facebook}
@@ -65,7 +70,7 @@ const Header = ({ socialLinks = { github: 'https://github.com/bilyabits/ytdl', f
                 whileTap={{ scale: 0.9 }}
                 className="text-gray-400 hover:text-green-500 transition-colors duration-300"
               >
-                <SafeIcon icon={FiFacebook} className="text-xl" />
+                <SafeIcon icon={FiFacebook} className="text-lg" />
               </motion.a>
             </div>
           </div>
@@ -75,7 +80,7 @@ const Header = ({ socialLinks = { github: 'https://github.com/bilyabits/ytdl', f
             className="md:hidden text-gray-400 focus:outline-none"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           >
-            <SafeIcon icon={mobileMenuOpen ? FiX : FiMenu} className="text-2xl" />
+            <SafeIcon icon={mobileMenuOpen ? FiX : FiMenu} className="text-xl" />
           </button>
         </div>
         
@@ -112,7 +117,7 @@ const Header = ({ socialLinks = { github: 'https://github.com/bilyabits/ytdl', f
                     whileTap={{ scale: 0.9 }}
                     className="text-gray-400 hover:text-green-500 transition-colors duration-300"
                   >
-                    <SafeIcon icon={FiGithub} className="text-2xl" />
+                    <SafeIcon icon={FiGithub} className="text-xl" />
                   </motion.a>
                   <motion.a 
                     href={socialLinks.facebook}
@@ -125,7 +130,7 @@ const Header = ({ socialLinks = { github: 'https://github.com/bilyabits/ytdl', f
                     whileTap={{ scale: 0.9 }}
                     className="text-gray-400 hover:text-green-500 transition-colors duration-300"
                   >
-                    <SafeIcon icon={FiFacebook} className="text-2xl" />
+                    <SafeIcon icon={FiFacebook} className="text-xl" />
                   </motion.a>
                 </div>
               </div>

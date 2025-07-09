@@ -12,7 +12,7 @@ import {
   downloadVideo 
 } from '../utils/youtube';
 
-const { FiLink, FiSearch, FiAlertCircle, FiClipboard } = FiIcons;
+const { FiLink, FiSearch, FiAlertCircle, FiClipboard, FiX } = FiIcons;
 
 const VideoDownloader = () => {
   const [url, setUrl] = useState('');
@@ -65,6 +65,10 @@ const VideoDownloader = () => {
     }
   };
 
+  const handleClearUrl = () => {
+    setUrl('');
+  };
+
   const handlePaste = async () => {
     try {
       const text = await navigator.clipboard.readText();
@@ -93,7 +97,7 @@ const VideoDownloader = () => {
         }));
       }, 300);
       
-      // Perform the download
+      // Perform the actual download
       const result = await downloadVideo(videoInfo, selectedFormat, selectedQuality);
       
       clearInterval(progressInterval);
@@ -114,7 +118,6 @@ const VideoDownloader = () => {
         });
       }, 3000);
       
-      // In a real app, this would trigger the actual file download
       console.log('Download completed:', result);
     } catch (err) {
       console.error('Download error:', err);
@@ -133,13 +136,13 @@ const VideoDownloader = () => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
-        className="text-center mb-8 md:mb-12"
+        className="text-center mb-6 md:mb-10"
       >
-        <h2 className="text-3xl md:text-4xl font-bold text-white mb-3 md:mb-4">
+        <h2 className="text-2xl md:text-4xl font-bold text-white mb-2 md:mb-4">
           Download YouTube Videos
         </h2>
-        <p className="text-gray-400 text-base md:text-lg">
-          Paste a YouTube URL and download videos in your preferred format and quality
+        <p className="text-gray-400 text-sm md:text-lg">
+          Paste a YouTube URL and download videos in your preferred format
         </p>
       </motion.div>
 
@@ -148,45 +151,54 @@ const VideoDownloader = () => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.2 }}
-        className="mb-8"
+        className="mb-6 md:mb-8"
       >
-        <div className="relative">
-          <div className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400">
-            <SafeIcon icon={FiLink} className="text-xl" />
+        {/* Mobile-optimized input with improved spacing */}
+        <div className="relative flex items-center mb-2">
+          <div className="absolute left-3 text-gray-400 z-10">
+            <SafeIcon icon={FiLink} className="text-lg" />
           </div>
           
-          {/* Mobile-optimized input with improved spacing */}
           <input
             type="text"
             value={url}
             onChange={(e) => setUrl(e.target.value)}
             placeholder="Paste YouTube URL here..."
-            className="w-full pl-12 pr-[120px] py-3 md:py-4 bg-zinc-900/60 backdrop-blur-sm border border-zinc-800 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-600 focus:border-transparent transition-all duration-300 text-sm md:text-base"
+            className="w-full pl-10 pr-10 py-3.5 bg-zinc-900/60 backdrop-blur-sm border border-zinc-800 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-600 focus:border-transparent transition-all duration-300 text-sm"
           />
           
-          {/* Fixed button positioning to prevent overlap */}
-          <div className="absolute right-[92px] top-1/2 transform -translate-y-1/2">
-            <motion.button
+          {url && (
+            <button
               type="button"
-              onClick={handlePaste}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="bg-zinc-800 hover:bg-zinc-700 text-gray-300 px-2 md:px-3 py-1.5 md:py-2 rounded-lg transition-colors duration-300 flex items-center space-x-1 text-xs md:text-sm"
+              onClick={handleClearUrl}
+              className="absolute right-3 text-gray-400 hover:text-white"
             >
-              <SafeIcon icon={FiClipboard} className="text-sm md:text-base" />
-              <span className="hidden xs:inline">Paste</span>
-            </motion.button>
-          </div>
+              <SafeIcon icon={FiX} className="text-lg" />
+            </button>
+          )}
+        </div>
+        
+        <div className="flex gap-2 mb-4">
+          <motion.button
+            type="button"
+            onClick={handlePaste}
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            className="flex-1 bg-zinc-800 hover:bg-zinc-700 text-gray-300 py-3 rounded-xl transition-colors duration-300 flex items-center justify-center space-x-2 text-sm font-medium"
+          >
+            <SafeIcon icon={FiClipboard} className="text-base" />
+            <span>Paste URL</span>
+          </motion.button>
           
           <motion.button
             type="submit"
             disabled={loading || !url}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-red-600 hover:bg-red-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white px-3 md:px-6 py-1.5 md:py-2 rounded-lg font-medium transition-all duration-300 flex items-center space-x-1 md:space-x-2 text-xs md:text-sm"
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            className="flex-1 bg-red-600 hover:bg-red-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white py-3 rounded-xl font-medium transition-all duration-300 flex items-center justify-center space-x-2 text-sm"
           >
             {loading ? (
-              <div className="animate-spin rounded-full h-4 w-4 md:h-5 md:w-5 border-b-2 border-white"></div>
+              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
             ) : (
               <>
                 <SafeIcon icon={FiSearch} />
@@ -202,7 +214,7 @@ const VideoDownloader = () => {
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
-              className="mt-4 p-3 bg-red-500/20 border border-red-500/50 rounded-lg flex items-center space-x-2 text-red-400 text-sm"
+              className="p-3 bg-red-500/20 border border-red-500/50 rounded-lg flex items-center space-x-2 text-red-400 text-sm"
             >
               <SafeIcon icon={FiAlertCircle} />
               <span>{error}</span>
@@ -218,11 +230,11 @@ const VideoDownloader = () => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.5 }}
-            className="space-y-6"
+            className="space-y-4 md:space-y-6"
           >
             <VideoInfo videoInfo={videoInfo} />
             
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
               <FormatSelector
                 selectedFormat={selectedFormat}
                 selectedQuality={selectedQuality}

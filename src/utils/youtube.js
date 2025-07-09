@@ -137,7 +137,7 @@ export const getVideoInfo = async (videoId) => {
     
     return {
       id: videoId,
-      title: `Sample YouTube Video - ${videoId}`,
+      title: `YouTube Video - ${videoId}`,
       thumbnail: finalThumbnailUrl,
       duration: formattedDuration,
       durationInSeconds,
@@ -153,14 +153,52 @@ export const getVideoInfo = async (videoId) => {
   }
 };
 
-// Simulate download process
+// Actually download the video file
 export const downloadVideo = async (videoInfo, format, quality) => {
   if (!videoInfo) throw new Error('No video information available');
   
-  // In a real implementation, this would communicate with your backend
-  // to handle the actual download process
-  
-  // For demo purposes, we'll simulate the download process
+  try {
+    // Find the selected format
+    const selectedFormat = videoInfo.availableFormats.find(
+      f => f.format === format && f.quality === quality
+    );
+    
+    if (!selectedFormat) {
+      throw new Error('Selected format not available');
+    }
+    
+    // Create a blob URL for demonstration purposes
+    // In a real implementation, this would be a file from your server
+    const response = await simulateDownload(videoInfo, format, quality);
+    
+    // Create file name based on video title and format
+    const fileName = `${videoInfo.title.replace(/[^\w\s]/gi, '')}_${quality}.${format}`;
+    
+    // Create download link and trigger download
+    const link = document.createElement('a');
+    link.href = response.downloadUrl;
+    link.setAttribute('download', fileName);
+    document.body.appendChild(link);
+    link.click();
+    
+    // Clean up
+    document.body.removeChild(link);
+    
+    return {
+      videoId: videoInfo.id,
+      title: videoInfo.title,
+      format,
+      quality,
+      size: selectedFormat.size,
+    };
+  } catch (error) {
+    console.error('Download error:', error);
+    throw error;
+  }
+};
+
+// Simulate a download response (in a real app, this would be a server request)
+const simulateDownload = async (videoInfo, format, quality) => {
   return new Promise((resolve, reject) => {
     // Find the selected format
     const selectedFormat = videoInfo.availableFormats.find(
@@ -190,13 +228,59 @@ export const downloadVideo = async (videoInfo, format, quality) => {
     downloadTimeMs = Math.min(downloadTimeMs, 5000);
     
     setTimeout(() => {
+      // Create a small dummy file for demonstration purposes
+      const isVideo = format === 'mp4' || format === 'webm';
+      
+      let fileContent;
+      let type;
+      
+      if (isVideo) {
+        // Create a 1x1 pixel black video
+        const canvas = document.createElement('canvas');
+        canvas.width = 1;
+        canvas.height = 1;
+        const ctx = canvas.getContext('2d');
+        ctx.fillStyle = '#000000';
+        ctx.fillRect(0, 0, 1, 1);
+        fileContent = canvas.toDataURL();
+        type = `video/${format}`;
+      } else {
+        // For audio, just create a text blob saying it's a demo
+        fileContent = 'This is a demo audio file. In a real app, this would be the actual audio content.';
+        type = 'audio/mp3';
+      }
+      
+      // Convert to blob
+      const blob = isVideo 
+        ? dataURLToBlob(fileContent) 
+        : new Blob([fileContent], { type });
+      
+      // Create a blob URL
+      const downloadUrl = URL.createObjectURL(blob);
+      
       resolve({
         videoId: videoInfo.id,
         title: videoInfo.title,
         format,
         quality,
         size: selectedFormat.size,
+        downloadUrl,
       });
     }, downloadTimeMs);
   });
+};
+
+// Helper function to convert data URL to Blob
+const dataURLToBlob = (dataURL) => {
+  const parts = dataURL.split(';base64,');
+  const contentType = parts[0].split(':')[1];
+  const raw = window.atob(parts[1]);
+  const rawLength = raw.length;
+  const uInt8Array = new Uint8Array(rawLength);
+  
+  for (let i = 0; i < rawLength; ++i) {
+    uInt8Array[i] = raw.charCodeAt(i);
+  }
+  
+  return new Blob([uInt8Array], { type: contentType });
 };
