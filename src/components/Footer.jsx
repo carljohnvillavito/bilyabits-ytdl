@@ -5,7 +5,7 @@ import SafeIcon from '../common/SafeIcon';
 
 const { FiHeart, FiShield, FiInfo, FiGithub, FiFacebook } = FiIcons;
 
-const Footer = () => {
+const Footer = ({ socialLinks = { github: 'https://github.com/bilyabits/ytdl', facebook: 'https://facebook.com/bilyabits' } }) => {
   return (
     <motion.footer
       initial={{ opacity: 0 }}
@@ -38,7 +38,7 @@ const Footer = () => {
           
           <div className="flex justify-center space-x-6 mt-3 md:mt-4">
             <motion.a 
-              href="https://github.com/bilyabits/ytdl" 
+              href={socialLinks.github}
               target="_blank"
               rel="noopener noreferrer"
               whileHover={{ scale: 1.1 }}
@@ -48,7 +48,7 @@ const Footer = () => {
               <SafeIcon icon={FiGithub} className="text-xl md:text-2xl" />
             </motion.a>
             <motion.a 
-              href="https://facebook.com/bilyabits" 
+              href={socialLinks.facebook}
               target="_blank"
               rel="noopener noreferrer"
               whileHover={{ scale: 1.1 }}

@@ -5,7 +5,12 @@ import SafeIcon from '../common/SafeIcon';
 import VideoInfo from './VideoInfo';
 import FormatSelector from './FormatSelector';
 import DownloadButton from './DownloadButton';
-import { validateYouTubeUrl, extractVideoId } from '../utils/youtube';
+import { 
+  validateYouTubeUrl, 
+  extractVideoId, 
+  getVideoInfo, 
+  downloadVideo 
+} from '../utils/youtube';
 
 const { FiLink, FiSearch, FiAlertCircle, FiClipboard } = FiIcons;
 
@@ -16,6 +21,11 @@ const VideoDownloader = () => {
   const [selectedQuality, setSelectedQuality] = useState('720p');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [downloadStatus, setDownloadStatus] = useState({
+    isDownloading: false,
+    progress: 0,
+    complete: false
+  });
 
   const handleUrlSubmit = async (e) => {
     e.preventDefault();
@@ -27,33 +37,28 @@ const VideoDownloader = () => {
     }
 
     setLoading(true);
+    setVideoInfo(null); // Clear previous video info
     
     try {
-      // Simulate API call to get video info
       const videoId = extractVideoId(url);
-      const mockVideoInfo = {
-        id: videoId,
-        title: 'Sample Video Title - Amazing Content',
-        thumbnail: `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`,
-        duration: '5:32',
-        views: '1,234,567',
-        author: 'Content Creator',
-        description: 'This is a sample video description that shows what the video is about...',
-        uploadDate: '2024-01-15',
-        availableFormats: [
-          { format: 'mp4', quality: '1080p', size: '150MB' },
-          { format: 'mp4', quality: '720p', size: '95MB' },
-          { format: 'mp4', quality: '480p', size: '65MB' },
-          { format: 'webm', quality: '720p', size: '85MB' },
-          { format: 'mp3', quality: '320kbps', size: '12MB' },
-        ]
-      };
+      if (!videoId) {
+        throw new Error('Could not extract video ID from URL');
+      }
       
-      // Simulate network delay
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      const info = await getVideoInfo(videoId);
+      setVideoInfo(info);
       
-      setVideoInfo(mockVideoInfo);
+      // Set default quality based on available formats
+      if (info.availableFormats.length > 0) {
+        // Find a 720p format if available, otherwise use the first format
+        const defaultFormat = info.availableFormats.find(f => f.format === 'mp4' && f.quality === '720p') 
+          || info.availableFormats[0];
+        
+        setSelectedFormat(defaultFormat.format);
+        setSelectedQuality(defaultFormat.quality);
+      }
     } catch (err) {
+      console.error('Error fetching video info:', err);
       setError('Failed to fetch video information. Please try again.');
     } finally {
       setLoading(false);
@@ -73,9 +78,53 @@ const VideoDownloader = () => {
   const handleDownload = async () => {
     if (!videoInfo) return;
     
-    // In a real implementation, this would trigger the download
-    // For demo purposes, we'll show a success message
-    alert(`Download started for ${videoInfo.title} in ${selectedFormat.toUpperCase()} format (${selectedQuality})`);
+    setDownloadStatus({
+      isDownloading: true,
+      progress: 0,
+      complete: false
+    });
+    
+    try {
+      // Simulate progress updates
+      const progressInterval = setInterval(() => {
+        setDownloadStatus(prev => ({
+          ...prev,
+          progress: Math.min(prev.progress + Math.random() * 15, 99)
+        }));
+      }, 300);
+      
+      // Perform the download
+      const result = await downloadVideo(videoInfo, selectedFormat, selectedQuality);
+      
+      clearInterval(progressInterval);
+      
+      // Complete the download
+      setDownloadStatus({
+        isDownloading: false,
+        progress: 100,
+        complete: true
+      });
+      
+      // Reset after 3 seconds
+      setTimeout(() => {
+        setDownloadStatus({
+          isDownloading: false,
+          progress: 0,
+          complete: false
+        });
+      }, 3000);
+      
+      // In a real app, this would trigger the actual file download
+      console.log('Download completed:', result);
+    } catch (err) {
+      console.error('Download error:', err);
+      setError(`Download failed: ${err.message}`);
+      setDownloadStatus({
+        isDownloading: false,
+        progress: 0,
+        complete: false
+      });
+    }
   };
 
   return (
@@ -106,23 +155,23 @@ const VideoDownloader = () => {
             <SafeIcon icon={FiLink} className="text-xl" />
           </div>
           
-          {/* Mobile-optimized input */}
+          {/* Mobile-optimized input with improved spacing */}
           <input
             type="text"
             value={url}
             onChange={(e) => setUrl(e.target.value)}
             placeholder="Paste YouTube URL here..."
-            className="w-full pl-12 pr-[90px] md:pr-32 py-3 md:py-4 bg-zinc-900/60 backdrop-blur-sm border border-zinc-800 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-600 focus:border-transparent transition-all duration-300 text-sm md:text-base"
+            className="w-full pl-12 pr-[120px] py-3 md:py-4 bg-zinc-900/60 backdrop-blur-sm border border-zinc-800 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-600 focus:border-transparent transition-all duration-300 text-sm md:text-base"
           />
           
-          {/* Mobile-optimized buttons */}
-          <div className="absolute right-[76px] md:right-24 top-1/2 transform -translate-y-1/2">
+          {/* Fixed button positioning to prevent overlap */}
+          <div className="absolute right-[92px] top-1/2 transform -translate-y-1/2">
             <motion.button
               type="button"
               onClick={handlePaste}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="bg-zinc-800 hover:bg-zinc-700 text-gray-300 px-2 md:px-3 py-1.5 md:py-2 rounded-lg mr-1 transition-colors duration-300 flex items-center space-x-1 text-xs md:text-sm"
+              className="bg-zinc-800 hover:bg-zinc-700 text-gray-300 px-2 md:px-3 py-1.5 md:py-2 rounded-lg transition-colors duration-300 flex items-center space-x-1 text-xs md:text-sm"
             >
               <SafeIcon icon={FiClipboard} className="text-sm md:text-base" />
               <span className="hidden xs:inline">Paste</span>
@@ -187,6 +236,7 @@ const VideoDownloader = () => {
                 selectedFormat={selectedFormat}
                 selectedQuality={selectedQuality}
                 videoTitle={videoInfo.title}
+                downloadStatus={downloadStatus}
               />
             </div>
           </motion.div>

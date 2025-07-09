@@ -18,6 +18,10 @@ const FormatSelector = ({
     { value: 'mp3', label: 'MP3 Audio', icon: FiMusic },
   ];
 
+  // Filter formats to only show those that are available
+  const availableFormatTypes = [...new Set(availableFormats.map(f => f.format))];
+  const filteredFormats = formats.filter(f => availableFormatTypes.includes(f.value));
+
   const getQualitiesForFormat = (format) => {
     return availableFormats
       .filter(f => f.format === format)
@@ -42,10 +46,17 @@ const FormatSelector = ({
             Format
           </label>
           <div className="grid grid-cols-1 gap-2">
-            {formats.map((format) => (
+            {filteredFormats.map((format) => (
               <motion.button
                 key={format.value}
-                onClick={() => onFormatChange(format.value)}
+                onClick={() => {
+                  onFormatChange(format.value);
+                  // Also set a default quality for this format
+                  const qualities = getQualitiesForFormat(format.value);
+                  if (qualities.length > 0) {
+                    onQualityChange(qualities[0].value);
+                  }
+                }}
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 className={`p-2 md:p-3 rounded-lg border transition-all duration-300 flex items-center space-x-2 md:space-x-3 text-sm md:text-base ${

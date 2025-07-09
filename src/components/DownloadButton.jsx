@@ -1,30 +1,18 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { motion } from 'framer-motion';
 import * as FiIcons from 'react-icons/fi';
 import SafeIcon from '../common/SafeIcon';
 
 const { FiDownload, FiCheck, FiArrowDown } = FiIcons;
 
-const DownloadButton = ({ onDownload, selectedFormat, selectedQuality, videoTitle }) => {
-  const [isDownloading, setIsDownloading] = useState(false);
-  const [downloadComplete, setDownloadComplete] = useState(false);
-
-  const handleDownload = async () => {
-    setIsDownloading(true);
-    
-    // Simulate download process
-    await new Promise(resolve => setTimeout(resolve, 3000));
-    
-    setIsDownloading(false);
-    setDownloadComplete(true);
-    
-    // Reset after 3 seconds
-    setTimeout(() => {
-      setDownloadComplete(false);
-    }, 3000);
-    
-    onDownload();
-  };
+const DownloadButton = ({ 
+  onDownload, 
+  selectedFormat, 
+  selectedQuality, 
+  videoTitle, 
+  downloadStatus = { isDownloading: false, progress: 0, complete: false }
+}) => {
+  const { isDownloading, progress, complete } = downloadStatus;
 
   return (
     <motion.div
@@ -56,20 +44,29 @@ const DownloadButton = ({ onDownload, selectedFormat, selectedQuality, videoTitl
             </div>
             <div className="flex justify-between">
               <span>Title:</span>
-              <span className="text-white font-medium truncate max-w-[150px] md:max-w-32">
+              <span className="text-white font-medium truncate max-w-[150px] md:max-w-[200px]">
                 {videoTitle}
               </span>
             </div>
           </div>
         </div>
         
+        {isDownloading && (
+          <div className="w-full bg-zinc-800 rounded-full h-2 md:h-3 overflow-hidden">
+            <div 
+              className="bg-gradient-to-r from-red-500 to-red-700 h-full transition-all duration-300" 
+              style={{ width: `${progress}%` }}
+            ></div>
+          </div>
+        )}
+        
         <motion.button
-          onClick={handleDownload}
-          disabled={isDownloading || downloadComplete}
+          onClick={onDownload}
+          disabled={isDownloading || complete}
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           className={`w-full py-3 md:py-4 rounded-xl font-bold text-base md:text-lg transition-all duration-300 flex items-center justify-center space-x-2 md:space-x-3 ${
-            downloadComplete
+            complete
               ? 'bg-green-600 hover:bg-green-700 text-white'
               : isDownloading
               ? 'bg-zinc-700 cursor-not-allowed text-gray-300'
@@ -79,9 +76,9 @@ const DownloadButton = ({ onDownload, selectedFormat, selectedQuality, videoTitl
           {isDownloading ? (
             <>
               <div className="animate-spin rounded-full h-5 w-5 md:h-6 md:w-6 border-b-2 border-white"></div>
-              <span>Downloading...</span>
+              <span>{Math.round(progress)}% Downloading...</span>
             </>
-          ) : downloadComplete ? (
+          ) : complete ? (
             <>
               <SafeIcon icon={FiCheck} className="text-lg md:text-xl" />
               <span>Downloaded!</span>

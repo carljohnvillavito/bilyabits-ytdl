@@ -5,7 +5,7 @@ import SafeIcon from '../common/SafeIcon';
 
 const { FiDownload, FiYoutube, FiGithub, FiFacebook, FiMenu, FiX } = FiIcons;
 
-const Header = () => {
+const Header = ({ socialLinks = { github: 'https://github.com/bilyabits/ytdl', facebook: 'https://facebook.com/bilyabits' } }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
@@ -48,7 +48,7 @@ const Header = () => {
             
             <div className="flex items-center space-x-4">
               <motion.a 
-                href="https://github.com/bilyabits/ytdl" 
+                href={socialLinks.github}
                 target="_blank"
                 rel="noopener noreferrer"
                 whileHover={{ scale: 1.1 }}
@@ -58,7 +58,7 @@ const Header = () => {
                 <SafeIcon icon={FiGithub} className="text-xl" />
               </motion.a>
               <motion.a 
-                href="https://facebook.com/bilyabits" 
+                href={socialLinks.facebook}
                 target="_blank"
                 rel="noopener noreferrer"
                 whileHover={{ scale: 1.1 }}
@@ -102,7 +102,7 @@ const Header = () => {
                 
                 <div className="flex justify-center space-x-8">
                   <motion.a 
-                    href="https://github.com/bilyabits/ytdl" 
+                    href={socialLinks.github}
                     target="_blank"
                     rel="noopener noreferrer"
                     initial={{ opacity: 0, y: -10 }}
@@ -115,7 +115,7 @@ const Header = () => {
                     <SafeIcon icon={FiGithub} className="text-2xl" />
                   </motion.a>
                   <motion.a 
-                    href="https://facebook.com/bilyabits" 
+                    href={socialLinks.facebook}
                     target="_blank"
                     rel="noopener noreferrer"
                     initial={{ opacity: 0, y: -10 }}
