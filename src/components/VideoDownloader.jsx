@@ -37,7 +37,7 @@ const VideoDownloader = () => {
     }
 
     setLoading(true);
-    setVideoInfo(null); // Clear previous video info
+    setVideoInfo(null);
     
     try {
       const videoId = extractVideoId(url);
@@ -50,7 +50,7 @@ const VideoDownloader = () => {
       
       // Set default quality based on available formats
       if (info.availableFormats.length > 0) {
-        // Find a 720p format if available, otherwise use the first format
+        // Find a 720p MP4 format if available, otherwise use the first format
         const defaultFormat = info.availableFormats.find(f => f.format === 'mp4' && f.quality === '720p') 
           || info.availableFormats[0];
         
@@ -59,7 +59,7 @@ const VideoDownloader = () => {
       }
     } catch (err) {
       console.error('Error fetching video info:', err);
-      setError('Failed to fetch video information. Please try again.');
+      setError(err.message || 'Failed to fetch video information. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -67,12 +67,14 @@ const VideoDownloader = () => {
 
   const handleClearUrl = () => {
     setUrl('');
+    setError('');
   };
 
   const handlePaste = async () => {
     try {
       const text = await navigator.clipboard.readText();
       setUrl(text);
+      setError('');
     } catch (err) {
       console.error('Failed to read clipboard contents: ', err);
       setError('Failed to access clipboard. Please paste the URL manually.');
@@ -88,14 +90,16 @@ const VideoDownloader = () => {
       complete: false
     });
     
+    setError('');
+    
     try {
       // Simulate progress updates
       const progressInterval = setInterval(() => {
         setDownloadStatus(prev => ({
           ...prev,
-          progress: Math.min(prev.progress + Math.random() * 15, 99)
+          progress: Math.min(prev.progress + Math.random() * 10, 90)
         }));
-      }, 300);
+      }, 500);
       
       // Perform the actual download
       const result = await downloadVideo(videoInfo, selectedFormat, selectedQuality);
@@ -121,7 +125,7 @@ const VideoDownloader = () => {
       console.log('Download completed:', result);
     } catch (err) {
       console.error('Download error:', err);
-      setError(`Download failed: ${err.message}`);
+      setError(err.message || 'Download failed. Please try again.');
       setDownloadStatus({
         isDownloading: false,
         progress: 0,
@@ -153,7 +157,6 @@ const VideoDownloader = () => {
         transition={{ duration: 0.6, delay: 0.2 }}
         className="mb-6 md:mb-8"
       >
-        {/* Mobile-optimized input with improved spacing */}
         <div className="relative flex items-center mb-2">
           <div className="absolute left-3 text-gray-400 z-10">
             <SafeIcon icon={FiLink} className="text-lg" />
