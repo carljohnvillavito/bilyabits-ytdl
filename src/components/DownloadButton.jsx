@@ -31,17 +31,17 @@ const DownloadButton = ({ onDownload, selectedFormat, selectedQuality, videoTitl
       initial={{ opacity: 0, x: 20 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.5, delay: 0.2 }}
-      className="bg-zinc-900/40 backdrop-blur-sm border border-zinc-800/50 rounded-2xl p-6 hover:border-red-600/30 transition-all duration-300"
+      className="bg-zinc-900/40 backdrop-blur-sm border border-zinc-800/50 rounded-2xl p-4 md:p-6 hover:border-red-600/30 transition-all duration-300"
     >
-      <div className="flex items-center space-x-2 mb-6">
-        <SafeIcon icon={FiDownload} className="text-red-600 text-xl" />
-        <h3 className="text-xl font-bold text-white">Download</h3>
+      <div className="flex items-center space-x-2 mb-4 md:mb-6">
+        <SafeIcon icon={FiDownload} className="text-lg md:text-xl text-red-600" />
+        <h3 className="text-lg md:text-xl font-bold text-white">Download</h3>
       </div>
       
-      <div className="space-y-4">
-        <div className="bg-zinc-800/50 rounded-lg p-4">
-          <h4 className="font-medium text-white mb-2">Download Summary</h4>
-          <div className="space-y-2 text-sm text-gray-400">
+      <div className="space-y-3 md:space-y-4">
+        <div className="bg-zinc-800/50 rounded-lg p-3 md:p-4">
+          <h4 className="font-medium text-sm md:text-base text-white mb-2">Download Summary</h4>
+          <div className="space-y-1 md:space-y-2 text-xs md:text-sm text-gray-400">
             <div className="flex justify-between">
               <span>Format:</span>
               <span className="text-red-400 font-medium">
@@ -56,7 +56,7 @@ const DownloadButton = ({ onDownload, selectedFormat, selectedQuality, videoTitl
             </div>
             <div className="flex justify-between">
               <span>Title:</span>
-              <span className="text-white font-medium truncate max-w-32">
+              <span className="text-white font-medium truncate max-w-[150px] md:max-w-32">
                 {videoTitle}
               </span>
             </div>
@@ -68,7 +68,7 @@ const DownloadButton = ({ onDownload, selectedFormat, selectedQuality, videoTitl
           disabled={isDownloading || downloadComplete}
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
-          className={`w-full py-4 rounded-xl font-bold text-lg transition-all duration-300 flex items-center justify-center space-x-3 ${
+          className={`w-full py-3 md:py-4 rounded-xl font-bold text-base md:text-lg transition-all duration-300 flex items-center justify-center space-x-2 md:space-x-3 ${
             downloadComplete
               ? 'bg-green-600 hover:bg-green-700 text-white'
               : isDownloading
@@ -78,23 +78,23 @@ const DownloadButton = ({ onDownload, selectedFormat, selectedQuality, videoTitl
         >
           {isDownloading ? (
             <>
-              <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white"></div>
+              <div className="animate-spin rounded-full h-5 w-5 md:h-6 md:w-6 border-b-2 border-white"></div>
               <span>Downloading...</span>
             </>
           ) : downloadComplete ? (
             <>
-              <SafeIcon icon={FiCheck} className="text-xl" />
+              <SafeIcon icon={FiCheck} className="text-lg md:text-xl" />
               <span>Downloaded!</span>
             </>
           ) : (
             <>
-              <SafeIcon icon={FiArrowDown} className="text-xl" />
+              <SafeIcon icon={FiArrowDown} className="text-lg md:text-xl" />
               <span>Download Video</span>
             </>
           )}
         </motion.button>
         
-        <p className="text-xs text-gray-500 text-center">
+        <p className="text-[10px] md:text-xs text-gray-500 text-center">
           By downloading, you agree to respect copyright laws and terms of service
         </p>
       </div>

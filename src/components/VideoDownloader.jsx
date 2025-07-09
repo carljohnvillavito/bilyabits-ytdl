@@ -79,17 +79,17 @@ const VideoDownloader = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto">
+    <div className="max-w-4xl mx-auto px-4">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
-        className="text-center mb-12"
+        className="text-center mb-8 md:mb-12"
       >
-        <h2 className="text-4xl font-bold text-white mb-4">
+        <h2 className="text-3xl md:text-4xl font-bold text-white mb-3 md:mb-4">
           Download YouTube Videos
         </h2>
-        <p className="text-gray-400 text-lg">
+        <p className="text-gray-400 text-base md:text-lg">
           Paste a YouTube URL and download videos in your preferred format and quality
         </p>
       </motion.div>
@@ -105,34 +105,39 @@ const VideoDownloader = () => {
           <div className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400">
             <SafeIcon icon={FiLink} className="text-xl" />
           </div>
+          
+          {/* Mobile-optimized input */}
           <input
             type="text"
             value={url}
             onChange={(e) => setUrl(e.target.value)}
             placeholder="Paste YouTube URL here..."
-            className="w-full pl-12 pr-32 py-4 bg-zinc-900/60 backdrop-blur-sm border border-zinc-800 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-600 focus:border-transparent transition-all duration-300"
+            className="w-full pl-12 pr-[90px] md:pr-32 py-3 md:py-4 bg-zinc-900/60 backdrop-blur-sm border border-zinc-800 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-600 focus:border-transparent transition-all duration-300 text-sm md:text-base"
           />
-          <div className="absolute right-24 top-1/2 transform -translate-y-1/2">
+          
+          {/* Mobile-optimized buttons */}
+          <div className="absolute right-[76px] md:right-24 top-1/2 transform -translate-y-1/2">
             <motion.button
               type="button"
               onClick={handlePaste}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="bg-zinc-800 hover:bg-zinc-700 text-gray-300 px-3 py-2 rounded-lg mr-2 transition-colors duration-300 flex items-center space-x-1"
+              className="bg-zinc-800 hover:bg-zinc-700 text-gray-300 px-2 md:px-3 py-1.5 md:py-2 rounded-lg mr-1 transition-colors duration-300 flex items-center space-x-1 text-xs md:text-sm"
             >
-              <SafeIcon icon={FiClipboard} />
-              <span className="text-sm">Paste</span>
+              <SafeIcon icon={FiClipboard} className="text-sm md:text-base" />
+              <span className="hidden xs:inline">Paste</span>
             </motion.button>
           </div>
+          
           <motion.button
             type="submit"
             disabled={loading || !url}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-red-600 hover:bg-red-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white px-6 py-2 rounded-lg font-medium transition-all duration-300 flex items-center space-x-2"
+            className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-red-600 hover:bg-red-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white px-3 md:px-6 py-1.5 md:py-2 rounded-lg font-medium transition-all duration-300 flex items-center space-x-1 md:space-x-2 text-xs md:text-sm"
           >
             {loading ? (
-              <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+              <div className="animate-spin rounded-full h-4 w-4 md:h-5 md:w-5 border-b-2 border-white"></div>
             ) : (
               <>
                 <SafeIcon icon={FiSearch} />
@@ -148,7 +153,7 @@ const VideoDownloader = () => {
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
-              className="mt-4 p-3 bg-red-500/20 border border-red-500/50 rounded-lg flex items-center space-x-2 text-red-400"
+              className="mt-4 p-3 bg-red-500/20 border border-red-500/50 rounded-lg flex items-center space-x-2 text-red-400 text-sm"
             >
               <SafeIcon icon={FiAlertCircle} />
               <span>{error}</span>
@@ -168,7 +173,7 @@ const VideoDownloader = () => {
           >
             <VideoInfo videoInfo={videoInfo} />
             
-            <div className="grid md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <FormatSelector
                 selectedFormat={selectedFormat}
                 selectedQuality={selectedQuality}
