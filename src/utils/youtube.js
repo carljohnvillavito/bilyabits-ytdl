@@ -1,6 +1,9 @@
 import axios from 'axios';
 
-const API_BASE_URL = 'http://localhost:3001/api';
+// Use the correct API base URL based on environment
+const API_BASE_URL = process.env.NODE_ENV === 'production' 
+  ? '/api' 
+  : 'http://localhost:3001/api';
 
 // Validate YouTube URL
 export const validateYouTubeUrl = (url) => {
@@ -54,15 +57,24 @@ export const formatFileSize = (bytes) => {
 // Get video information from our backend API
 export const getVideoInfo = async (videoId) => {
   try {
+    console.log('Fetching video info for:', videoId);
+    console.log('API URL:', `${API_BASE_URL}/video-info/${videoId}`);
+    
     const response = await axios.get(`${API_BASE_URL}/video-info/${videoId}`);
+    console.log('Video info response:', response.data);
     return response.data;
   } catch (error) {
     console.error('Error fetching video info:', error);
     
+    if (error.response) {
+      console.error('Response status:', error.response.status);
+      console.error('Response data:', error.response.data);
+    }
+    
     if (error.response?.status === 404) {
       throw new Error('Video not found. Please check the URL and try again.');
     } else if (error.response?.status === 500) {
-      throw new Error('Server error. Please try again later.');
+      throw new Error(error.response.data?.error || 'Server error. Please try again later.');
     } else {
       throw new Error('Failed to fetch video information. Please check your connection and try again.');
     }
@@ -74,6 +86,8 @@ export const downloadVideo = async (videoInfo, format, quality) => {
   if (!videoInfo) throw new Error('No video information available');
   
   try {
+    console.log('Downloading video:', videoInfo.id, format, quality);
+    
     // Find the selected format
     const selectedFormat = videoInfo.availableFormats.find(
       f => f.format === format && f.quality === quality
@@ -82,6 +96,8 @@ export const downloadVideo = async (videoInfo, format, quality) => {
     if (!selectedFormat) {
       throw new Error('Selected format not available');
     }
+    
+    console.log('Selected format:', selectedFormat);
     
     // Make download request to our backend
     const response = await axios.post(`${API_BASE_URL}/download`, {
@@ -99,6 +115,8 @@ export const downloadVideo = async (videoInfo, format, quality) => {
         }
       }
     });
+    
+    console.log('Download response received');
     
     // Create blob URL and trigger download
     const blob = new Blob([response.data], { 
@@ -127,12 +145,17 @@ export const downloadVideo = async (videoInfo, format, quality) => {
   } catch (error) {
     console.error('Download error:', error);
     
+    if (error.response) {
+      console.error('Response status:', error.response.status);
+      console.error('Response data:', error.response.data);
+    }
+    
     if (error.code === 'ECONNABORTED') {
       throw new Error('Download timeout. Please try again.');
     } else if (error.response?.status === 404) {
       throw new Error('Video format not available for download.');
     } else if (error.response?.status === 500) {
-      throw new Error('Server error during download. Please try again.');
+      throw new Error(error.response.data?.error || 'Server error during download. Please try again.');
     } else {
       throw new Error(`Download failed: ${error.message}`);
     }
