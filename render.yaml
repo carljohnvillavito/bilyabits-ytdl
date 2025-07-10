@@ -1,0 +1,13 @@
+# Render Blueprint for a Next.js application
+# https://render.com/docs/deploy-nextjs-app
+
+services:
+  - type: web
+    name: bilyabits-ytdl
+    env: node
+    plan: free # optional, defaults to starter
+    buildCommand: "npm install && npm run build"
+    startCommand: "npm run start"
+    envVars:
+      - key: NODE_ENV
+        value: production

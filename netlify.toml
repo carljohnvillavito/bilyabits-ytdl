@@ -1,0 +1,14 @@
+# Netlify build configuration for a Next.js app
+# https://docs.netlify.com/integrations/frameworks/next-js/
+
+[build]
+  # This will be the directory to publish to the CDN
+  publish = ".next"
+  
+  # The build command for the site
+  command = "npm run build"
+
+[[plugins]]
+  # The Essential Next.js Build Plugin is required for Next.js features
+  # to work correctly on Netlify.
+  package = "@netlify/plugin-nextjs"
