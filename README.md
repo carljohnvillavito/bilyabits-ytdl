@@ -29,9 +29,9 @@ BILYABITS-YTDL is a web application that provides a user-friendly interface to d
 
 You can deploy your own version of BILYABITS-YTDL with a single click on your preferred platform:
 
-[![Deploy to Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/carljohnvillavito/bilyabits-ytdl/tree/main)
-[![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/carljohnvillavito/bilyabits-ytdl/tree/main)
-[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/carljohnvillavito/bilyabits-ytdl/tree/main)
+[![Deploy to Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/carljohnvillavito/bilyabits-ytdl)
+[![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/carljohnvillavito/bilyabits-ytdl)
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/carljohnvillavito/bilyabits-ytdl)
 
 ### Manual Installation
 
